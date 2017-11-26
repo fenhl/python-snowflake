@@ -1,14 +1,14 @@
 import datetime
 
 # twitter's snowflake parameters
-twepoch = 1288834974657L
-datacenter_id_bits = 5L
-worker_id_bits = 5L
-sequence_id_bits = 12L
+twepoch = 1288834974657
+datacenter_id_bits = 5
+worker_id_bits = 5
+sequence_id_bits = 12
 max_datacenter_id = 1 << datacenter_id_bits
 max_worker_id = 1 << worker_id_bits
 max_sequence_id = 1 << sequence_id_bits
-max_timestamp = 1 << (64L - datacenter_id_bits - worker_id_bits - sequence_id_bits)
+max_timestamp = 1 << (64 - datacenter_id_bits - worker_id_bits - sequence_id_bits)
 
 def make_snowflake(timestamp_ms, datacenter_id, worker_id, sequence_id, twepoch=twepoch):
     """generate a twitter-snowflake id, based on 
@@ -30,14 +30,14 @@ def melt(snowflake_id, twepoch=twepoch):
     timestamp_ms = snowflake_id >> sequence_id_bits >> worker_id_bits >> datacenter_id_bits
     timestamp_ms += twepoch
 
-    return (timestamp_ms, int(datacenter_id), int(worker_id), int(sequence_id))
+    return timestamp_ms, int(datacenter_id), int(worker_id), int(sequence_id)
 
 def local_datetime(timestamp_ms):
     """convert millisecond timestamp to local datetime object."""
-    return datetime.datetime.fromtimestamp(timestamp_ms / 1000.)
+    return datetime.datetime.fromtimestamp(timestamp_ms / 1000)
 
 if __name__ == '__main__':
     import time
     t0 = int(time.time() * 1000)
-    print local_datetime(t0)
-    assert(melt(make_snowflake(t0, 0, 0, 0))[0] == t0)
+    print(local_datetime(t0))
+    assert melt(make_snowflake(t0, 0, 0, 0))[0] == t0
